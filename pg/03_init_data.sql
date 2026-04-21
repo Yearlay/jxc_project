@@ -141,26 +141,24 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 
 -- ── 用户管理 三级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(72, 57, '增加用户',   '/system/user/add',    3, 1),
-(73, 57, '修改用户',   '/system/user/edit',   3, 2),
-(74, 57, '删除用户',   '/system/user/delete', 3, 3),
-(75, 57, '权限组管理', '/system/user/role',   3, 4);
+(72, 57, '用户管理',   '/system/user/manage', 3, 1),
+(73, 57, '权限组管理', '/system/user/role',   3, 2);
 
 -- ── 顾客管理 三级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(76, 59, '创建客户',     '/system/customer/add',      3, 1),
-(77, 59, '修改客户信息', '/system/customer/edit',     3, 2),
-(78, 59, '删除客户',     '/system/customer/delete',   3, 3),
-(79, 59, '账户充值',     '/system/customer/recharge', 3, 4),
-(80, 59, '客户信息查询', '/system/customer/query',    3, 5);
+(74, 59, '创建客户',     '/system/customer/add',      3, 1),
+(75, 59, '修改客户信息', '/system/customer/edit',     3, 2),
+(76, 59, '删除客户',     '/system/customer/delete',   3, 3),
+(77, 59, '账户充值',     '/system/customer/recharge', 3, 4),
+(78, 59, '客户信息查询', '/system/customer/query',    3, 5);
 
 -- ── 积分管理 三级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(81, 61, '积分兑换',     '/system/points/exchange',  3, 1),
-(82, 61, '礼品设置',     '/system/points/gift-setup',3, 2),
-(83, 61, '选择礼品',     '/system/points/select',    3, 3),
-(84, 61, '确认兑换',     '/system/points/confirm',   3, 4),
-(85, 61, '积分兑换记录', '/system/points/records',   3, 5);
+(79, 61, '积分兑换',     '/system/points/exchange',  3, 1),
+(80, 61, '礼品设置',     '/system/points/gift-setup',3, 2),
+(81, 61, '选择礼品',     '/system/points/select',    3, 3),
+(82, 61, '确认兑换',     '/system/points/confirm',   3, 4),
+(83, 61, '积分兑换记录', '/system/points/records',   3, 5);
 
 -- 重置序列，避免后续 INSERT 冲突
 SELECT setval('sys_menu_id_seq', (SELECT MAX(id) FROM sys_menu));
