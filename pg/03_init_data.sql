@@ -122,7 +122,7 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 (56, 6, '登陆密码修改',     '/system/password',    2, 4),
 (57, 6, '用户管理',         '/system/user',        2, 5),
 (58, 6, '生日提醒',         '/system/birthday',    2, 6),
-(59, 6, '顾客管理',         '/system/customer',    2, 7),
+(59, 6, '客户管理',         '/system/customer',    2, 7),
 (60, 6, '供货商管理',       '/system/supplier',    2, 8),
 (61, 6, '积分管理',         '/system/points',      2, 9);
 
@@ -143,22 +143,6 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 (72, 57, '用户管理',   '/system/user/manage', 3, 1),
 (73, 57, '权限组管理', '/system/user/role',   3, 2);
-
--- ── 顾客管理 三级菜单 ──────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(74, 59, '创建客户',     '/system/customer/add',      3, 1),
-(75, 59, '修改客户信息', '/system/customer/edit',     3, 2),
-(76, 59, '删除客户',     '/system/customer/delete',   3, 3),
-(77, 59, '账户充值',     '/system/customer/recharge', 3, 4),
-(78, 59, '客户信息查询', '/system/customer/query',    3, 5);
-
--- ── 积分管理 三级菜单 ──────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(79, 61, '积分兑换',     '/system/points/exchange',  3, 1),
-(80, 61, '礼品设置',     '/system/points/gift-setup',3, 2),
-(81, 61, '选择礼品',     '/system/points/select',    3, 3),
-(82, 61, '确认兑换',     '/system/points/confirm',   3, 4),
-(83, 61, '积分兑换记录', '/system/points/records',   3, 5);
 
 -- 重置序列，避免后续 INSERT 冲突
 SELECT setval('sys_menu_id_seq', (SELECT MAX(id) FROM sys_menu));
