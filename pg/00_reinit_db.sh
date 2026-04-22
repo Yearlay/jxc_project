@@ -28,3 +28,5 @@ PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT 
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 07_create_warehouse_table.sql
 # step 8: 创建系统表：sys_company（企业/门店信息），不插入数据
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 08_create_company_table.sql
+# step 9: 创建业务表：biz_unit/biz_manufacturer/biz_vehicle/biz_payment，并初始化默认数据
+PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 09_create_basic_tables.sql

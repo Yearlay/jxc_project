@@ -61,6 +61,10 @@ import CustomerManage from './CustomerManage.vue'
 import WarehouseManage from './WarehouseManage.vue'
 import UserManage from './UserManage.vue'
 import CompanyInfo from './CompanyInfo.vue'
+import UnitManage from './UnitManage.vue'
+import ManufacturerManage from './ManufacturerManage.vue'
+import VehicleManage from './VehicleManage.vue'
+import PaymentManage from './PaymentManage.vue'
 import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
@@ -72,6 +76,10 @@ const COMPONENT_MAP = {
   '/system/basic/warehouse':   WarehouseManage,
   '/system/user/manage':        UserManage,
   '/system/company':             CompanyInfo,
+  '/system/basic/unit':         UnitManage,
+  '/system/basic/manufacturer': ManufacturerManage,
+  '/system/basic/vehicle':      VehicleManage,
+  '/system/basic/payment':      PaymentManage,
 }
 
 const router = useRouter()

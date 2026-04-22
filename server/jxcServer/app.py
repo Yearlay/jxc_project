@@ -11,6 +11,7 @@ from api.member_type import member_type_bp
 from api.customer import customer_bp
 from api.warehouse import warehouse_bp
 from api.company import company_bp
+from api.basic import basic_bp
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域（开发阶段）
@@ -25,6 +26,7 @@ app.register_blueprint(member_type_bp, url_prefix='/api')
 app.register_blueprint(customer_bp, url_prefix='/api')
 app.register_blueprint(warehouse_bp, url_prefix='/api')
 app.register_blueprint(company_bp, url_prefix='/api')
+app.register_blueprint(basic_bp, url_prefix='/api')
 
 
 # ──────────────────────────────────────────────────────────
