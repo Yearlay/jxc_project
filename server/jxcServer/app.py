@@ -6,6 +6,10 @@ from api.auth import auth_bp, verify_token
 from api.menu import menu_bp
 from api.group import group_bp
 from api.user import user_bp
+from api.area import area_bp
+from api.member_type import member_type_bp
+from api.customer import customer_bp
+from api.warehouse import warehouse_bp
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域（开发阶段）
@@ -15,6 +19,10 @@ app.register_blueprint(auth_bp, url_prefix='/api')
 app.register_blueprint(menu_bp, url_prefix='/api')
 app.register_blueprint(group_bp, url_prefix='/api')
 app.register_blueprint(user_bp, url_prefix='/api')
+app.register_blueprint(area_bp, url_prefix='/api')
+app.register_blueprint(member_type_bp, url_prefix='/api')
+app.register_blueprint(customer_bp, url_prefix='/api')
+app.register_blueprint(warehouse_bp, url_prefix='/api')
 
 
 # ──────────────────────────────────────────────────────────

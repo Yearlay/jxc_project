@@ -15,9 +15,17 @@
       <a-layout-header class="header">
         <span class="title">进销存系统</span>
         <div class="user-area">
-          <span>{{ userInfo.real_name || userInfo.username }}</span>
-          <a-divider type="vertical" />
-          <a @click="handleLogout">退出登录</a>
+          <a-dropdown placement="bottomRight">
+            <span class="user-dropdown-trigger">
+              {{ userInfo.real_name || userInfo.username }}
+              <DownOutlined style="font-size:12px; margin-left:4px" />
+            </span>
+            <template #overlay>
+              <a-menu>
+                <a-menu-item key="logout" @click="handleLogout">退出登录</a-menu-item>
+              </a-menu>
+            </template>
+          </a-dropdown>
         </div>
       </a-layout-header>
 
@@ -42,13 +50,24 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
+import { DownOutlined } from '@ant-design/icons-vue'
 import SideMenu from '../components/SideMenu.vue'
 import GroupManage from './GroupManage.vue'
+import AreaManage from './AreaManage.vue'
+import MemberTypeManage from './MemberTypeManage.vue'
+import CustomerManage from './CustomerManage.vue'
+import WarehouseManage from './WarehouseManage.vue'
+import UserManage from './UserManage.vue'
 import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
 const COMPONENT_MAP = {
-  '/system/user/role': GroupManage,
+  '/system/user/role':         GroupManage,
+  '/system/basic/area':        AreaManage,
+  '/system/basic/member-type': MemberTypeManage,
+  '/system/customer':          CustomerManage,
+  '/system/basic/warehouse':   WarehouseManage,
+  '/system/user/manage':        UserManage,
 }
 
 const router = useRouter()
@@ -60,7 +79,7 @@ const currentPath = ref('')
 
 const currentComponent = computed(() => COMPONENT_MAP[currentPath.value] || null)
 
-// 默认进入：系统维护 -> 登陆密码修改（在菜单中查找）
+// 默认进入：系统维护 -> 设置企业信息（在菜单中查找）
 const defaultMenuId = ref(null)
 
 const userInfo = reactive(
@@ -72,17 +91,17 @@ onMounted(async () => {
     const res = await getMenu()
     if (res.code === 200) {
       menuTree.value = res.data
-      // 找到 "登陆密码修改" 的 id
+      // 找到 "设置企业信息" 的 id
       for (const m of res.data) {
         for (const c of m.children || []) {
-          if (c.name === '登陆密码修改') {
+          if (c.name === '设置企业信息') {
             defaultMenuId.value = c.id
             currentMenu.value = c.name
             currentPath.value = c.path || ''
             return
           }
           for (const leaf of c.children || []) {
-            if (leaf.name === '登陆密码修改') {
+            if (leaf.name === '设置企业信息') {
               defaultMenuId.value = leaf.id
               currentMenu.value = leaf.name
               currentPath.value = leaf.path || ''
@@ -150,6 +169,16 @@ function handleLogout() {
 .user-area {
   display: flex;
   align-items: center;
+}
+.user-dropdown-trigger {
+  cursor: pointer;
+  color: #003a8c;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.user-dropdown-trigger:hover {
+  color: #1677ff;
 }
 .content {
   margin: 16px;

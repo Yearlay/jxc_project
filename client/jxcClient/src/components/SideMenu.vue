@@ -99,6 +99,8 @@ watch(
 )
 
 function onMenuClick({ key }) {
-  emit('menuSelect', key)
+  // key 可能是数字（三级叶节点）或 "id_leaf" 字符串（二级叶节点），统一转为数字 id
+  const id = typeof key === 'string' ? parseInt(key) : key
+  emit('menuSelect', id)
 }
 </script>
