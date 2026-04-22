@@ -1,5 +1,8 @@
 <template>
-  <a-layout style="height: 100vh; overflow: hidden">
+  <!-- POS 全屏模式 -->
+  <PosPage v-if="posMode" @back="posMode = false" />
+
+  <a-layout v-else style="height: 100vh; overflow: hidden">
     <!-- 左侧菜单 -->
     <a-layout-sider v-model:collapsed="collapsed" collapsible class="sider">
       <div class="logo">{{ collapsed ? 'JXC' : '进销存系统' }}</div>
@@ -15,7 +18,9 @@
     <a-layout style="height: 100vh; overflow: hidden; display: flex; flex-direction: column">
       <!-- 顶栏 -->
       <a-layout-header class="header">
-        <span class="title">进销存系统</span>
+        <a-button type="primary" class="pos-btn" @click="posMode = true">
+          <ShopOutlined />POS 前台销售
+        </a-button>
         <div class="user-area">
           <a-dropdown placement="bottomRight">
             <span class="user-dropdown-trigger">
@@ -52,7 +57,7 @@
 import { ref, reactive, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { message } from 'ant-design-vue'
-import { DownOutlined } from '@ant-design/icons-vue'
+import { DownOutlined, ShopOutlined } from '@ant-design/icons-vue'
 import SideMenu from '../components/SideMenu.vue'
 import GroupManage from './GroupManage.vue'
 import AreaManage from './AreaManage.vue'
@@ -65,6 +70,7 @@ import UnitManage from './UnitManage.vue'
 import ManufacturerManage from './ManufacturerManage.vue'
 import VehicleManage from './VehicleManage.vue'
 import PaymentManage from './PaymentManage.vue'
+import PosPage from './PosPage.vue'
 import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
@@ -83,6 +89,7 @@ const COMPONENT_MAP = {
 }
 
 const router = useRouter()
+const posMode = ref(false)
 const collapsed = ref(false)
 const menuTree = ref([])
 const currentMenuId = ref(null)
@@ -174,9 +181,12 @@ function handleLogout() {
   justify-content: space-between;
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
-.title {
-  font-size: 18px;
+.pos-btn {
+  font-size: 14px;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 .user-area {
   display: flex;
