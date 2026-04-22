@@ -20,3 +20,9 @@ PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT 
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 03_init_data.sql
 # step 4: 创建分组表：sys_group、sys_group_menu； 并初始化分组数据
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 04_create_group_tables.sql
+# step 5: 创建业务表：biz_area（片区信息）、biz_member_type（会员类型），并初始化数据
+PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 05_create_area_membertype_tables.sql
+# step 6: 创建业务表：biz_customer（客户管理），并初始化数据
+PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 06_create_customer_table.sql
+# step 7: 创建业务表：biz_warehouse（仓库管理），并初始化数据
+PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 07_create_warehouse_table.sql

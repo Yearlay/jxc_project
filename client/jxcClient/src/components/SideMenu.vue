@@ -39,22 +39,28 @@ import { ref, watch } from 'vue'
 import {
   DatabaseOutlined,
   ShoppingCartOutlined,
-  ShopOutlined,
-  InboxOutlined,
+  TagOutlined,
+  BarcodeOutlined,
+  ContainerOutlined,
+  AccountBookOutlined,
   BarChartOutlined,
+  PieChartOutlined,
   SettingOutlined,
-  SafetyOutlined,
+  TeamOutlined,
   AppstoreOutlined,
 } from '@ant-design/icons-vue'
 
 const ICON_MAP = {
-  '基础档案': DatabaseOutlined,
-  '采购管理': ShoppingCartOutlined,
-  '销售管理': ShopOutlined,
-  '库存管理': InboxOutlined,
-  '报表查询': BarChartOutlined,
-  '系统维护': SettingOutlined,
-  '权限管理': SafetyOutlined,
+  '基础档案': DatabaseOutlined,       // 数据库圆柱
+  '采购管理': ShoppingCartOutlined,   // 购物车
+  '销售管理': TagOutlined,            // 价格标签
+  '商品管理': BarcodeOutlined,        // 条形码
+  '库存管理': ContainerOutlined,      // 集装箱/仓库
+  '财务管理': AccountBookOutlined,    // 账本
+  '报表查询': BarChartOutlined,       // 柱状图
+  '营业统计': PieChartOutlined,       // 饼图
+  '系统维护': SettingOutlined,        // 齿轮
+  '权限管理': TeamOutlined,           // 团队/人员
 }
 
 function getIcon(name) {
@@ -99,6 +105,8 @@ watch(
 )
 
 function onMenuClick({ key }) {
-  emit('menuSelect', key)
+  // key 可能是数字（三级叶节点）或 "id_leaf" 字符串（二级叶节点），统一转为数字 id
+  const id = typeof key === 'string' ? parseInt(key) : key
+  emit('menuSelect', id)
 }
 </script>
