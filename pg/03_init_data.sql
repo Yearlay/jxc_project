@@ -136,7 +136,7 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 (67, 60, '付款方式', '/system/basic/payment',        3, 7),
 (68, 60, '采购业务员','/system/basic/purchase-staff',3, 8),
 (69, 60, '销售业务员','/system/basic/sales-staff',   3, 9),
-(70, 60, '分店终端', '/system/basic/branch',         3, 10);
+(70, 60, '销售终端', '/system/basic/branch',         3, 10);
 
 -- 重置序列，避免后续 INSERT 冲突
 SELECT setval('sys_menu_id_seq', (SELECT MAX(id) FROM sys_menu));
