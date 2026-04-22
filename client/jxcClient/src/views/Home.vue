@@ -60,6 +60,7 @@ import MemberTypeManage from './MemberTypeManage.vue'
 import CustomerManage from './CustomerManage.vue'
 import WarehouseManage from './WarehouseManage.vue'
 import UserManage from './UserManage.vue'
+import CompanyInfo from './CompanyInfo.vue'
 import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
@@ -70,6 +71,7 @@ const COMPONENT_MAP = {
   '/system/customer':          CustomerManage,
   '/system/basic/warehouse':   WarehouseManage,
   '/system/user/manage':        UserManage,
+  '/system/company':             CompanyInfo,
 }
 
 const router = useRouter()

@@ -116,32 +116,27 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 
 -- ── 系统维护 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(53, 6, '设置企业信息',     '/system/company',     2, 1),
-(54, 6, '基础信息设置',     '/system/basic',       2, 2),
-(55, 6, '商品基础信息设置', '/system/goods-basic', 2, 3),
-(56, 6, '用户管理',         '/system/user',        2, 5),
-(57, 6, '生日提醒',         '/system/birthday',    2, 6),
-(58, 6, '客户管理',         '/system/customer',    2, 7),
-(59, 6, '供货商管理',       '/system/supplier',    2, 8),
-(60, 6, '积分管理',         '/system/points',      2, 9);
+(53, 6, '设置企业信息',      '/system/company',     2, 1),
+(54, 6, '用户管理',         '/system/user/manage', 2, 2),
+(55, 6, '权限组管理',       '/system/user/role',   2, 3),
+(56, 6, '生日提醒',         '/system/birthday',    2, 4),
+(57, 6, '客户管理',         '/system/customer',    2, 5),
+(58, 6, '供货商管理',       '/system/supplier',    2, 6),
+(59, 6, '积分管理',         '/system/points',      2, 7),
+(60, 6, '基础信息设置',      '/system/basic',       2, 8);
 
 -- ── 基础信息设置 三级菜单 ──────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(61, 54, '仓库',     '/system/basic/warehouse',      3, 1),
-(62, 54, '计量单位', '/system/basic/unit',           3, 2),
-(63, 54, '厂家信息', '/system/basic/manufacturer',   3, 3),
-(64, 54, '会员类型', '/system/basic/member-type',    3, 4),
-(65, 54, '片区信息', '/system/basic/area',           3, 5),
-(66, 54, '车辆信息', '/system/basic/vehicle',        3, 6),
-(67, 54, '付款方式', '/system/basic/payment',        3, 7),
-(68, 54, '采购业务员','/system/basic/purchase-staff',3, 8),
-(69, 54, '销售业务员','/system/basic/sales-staff',   3, 9),
-(70, 54, '分店终端', '/system/basic/branch',         3, 10);
-
--- ── 用户管理 三级菜单 ──────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(71, 56, '用户管理',   '/system/user/manage', 3, 1),
-(72, 56, '权限组管理', '/system/user/role',   3, 2);
+(61, 60, '仓库',     '/system/basic/warehouse',      3, 1),
+(62, 60, '计量单位', '/system/basic/unit',           3, 2),
+(63, 60, '厂家信息', '/system/basic/manufacturer',   3, 3),
+(64, 60, '会员类型', '/system/basic/member-type',    3, 4),
+(65, 60, '片区信息', '/system/basic/area',           3, 5),
+(66, 60, '车辆信息', '/system/basic/vehicle',        3, 6),
+(67, 60, '付款方式', '/system/basic/payment',        3, 7),
+(68, 60, '采购业务员','/system/basic/purchase-staff',3, 8),
+(69, 60, '销售业务员','/system/basic/sales-staff',   3, 9),
+(70, 60, '分店终端', '/system/basic/branch',         3, 10);
 
 -- 重置序列，避免后续 INSERT 冲突
 SELECT setval('sys_menu_id_seq', (SELECT MAX(id) FROM sys_menu));
