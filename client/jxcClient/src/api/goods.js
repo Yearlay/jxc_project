@@ -16,4 +16,6 @@ export const addGoodsStock = (data) => request.post('/api/goods/stock/add', data
 
 export const updateGoodsStock = (data) => request.put('/api/goods/stock/update', data)
 
+export const deleteGoodsStock = (data) => request.delete('/api/goods/stock/delete', { data })
+
 export const transferGoodsStock = (data) => request.post('/api/goods/stock/transfer', data)

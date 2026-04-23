@@ -438,3 +438,27 @@ def stock_transfer():
         conn.close()
 
     return _ok(msg='调拨成功')
+
+
+@goods_bp.route('/goods/stock/delete', methods=['DELETE'])
+def stock_delete():
+    data = request.get_json(force=True) or {}
+    sid = data.get('id')
+    if not sid:
+        return _err('id 不能为空')
+
+    conn = db.get_conn()
+    try:
+        with conn.cursor() as cur:
+            cur.execute('SELECT id FROM biz_goods_stock WHERE id=%s', (sid,))
+            if not cur.fetchone():
+                return _err('库存记录不存在')
+            cur.execute('DELETE FROM biz_goods_stock WHERE id=%s', (sid,))
+        conn.commit()
+    except Exception as e:
+        conn.rollback()
+        return _err(str(e), 500)
+    finally:
+        conn.close()
+
+    return _ok(msg='删除成功')

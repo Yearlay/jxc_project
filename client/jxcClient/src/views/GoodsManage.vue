@@ -364,6 +364,16 @@
           <template v-else-if="column.key === 'quantity'">
             <a-input-number v-model:value="record.quantity" :min="0" :precision="0" style="width: 100%" />
           </template>
+          <template v-else-if="column.key === 'action'">
+            <a-popconfirm
+              title="确定删除该库存记录？"
+              ok-text="删除"
+              cancel-text="取消"
+              @confirm="handleStockDelete(record)"
+            >
+              <a-button type="link" danger size="small" :icon="h(DeleteOutlined)" />
+            </a-popconfirm>
+          </template>
         </template>
       </a-table>
     </a-modal>
@@ -424,7 +434,7 @@
 </template>
 
 <script setup>
-import { computed, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
+import { computed, h, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
 import { message, Modal } from 'ant-design-vue'
 import {
   DeleteOutlined,
@@ -441,6 +451,7 @@ import {
   addGoods,
   addGoodsStock,
   deleteGoods,
+  deleteGoodsStock,
   getGoodsList,
   getGoodsStockList,
   transferGoodsStock,
@@ -530,6 +541,7 @@ const stockCheckColumns = [
   { title: '颜色', dataIndex: 'color', key: 'color' },
   { title: '生产日期', dataIndex: 'produce_date', key: 'produce_date', width: 160 },
   { title: '数量', dataIndex: 'quantity', key: 'quantity', width: 120 },
+  { title: '操作', key: 'action', width: 70, align: 'center' },
 ]
 
 const goodsRules = {
@@ -901,6 +913,17 @@ async function handleAddStock() {
     message.error(err.response?.data?.msg || '增加库存失败')
   } finally {
     addStockSubmitting.value = false
+  }
+}
+
+async function handleStockDelete(record) {
+  try {
+    await deleteGoodsStock({ id: record.id })
+    stockCheckRows.value = stockCheckRows.value.filter((r) => r.id !== record.id)
+    message.success('删除成功')
+    loadGoods()
+  } catch (err) {
+    message.error(err.response?.data?.msg || '删除失败')
   }
 }
 
