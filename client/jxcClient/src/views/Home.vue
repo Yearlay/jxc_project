@@ -74,6 +74,7 @@ import PurchaseStaffManage from './PurchaseStaffManage.vue'
 import SalesStaffManage from './SalesStaffManage.vue'
 import TerminalManage from './TerminalManage.vue'
 import GoodsCategoryManage from './GoodsCategoryManage.vue'
+import GoodsManage from './GoodsManage.vue'
 import PosPage from './PosPage.vue'
 import { getMenu } from '../api/menu'
 
@@ -94,6 +95,7 @@ const COMPONENT_MAP = {
   '/system/basic/sales-staff':    SalesStaffManage,
   '/system/basic/branch':         TerminalManage,
   '/goods/category':              GoodsCategoryManage,
+  '/goods/list':                  GoodsManage,
 }
 
 const router = useRouter()

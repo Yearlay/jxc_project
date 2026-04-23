@@ -302,7 +302,11 @@ onMounted(loadTree)
 <style scoped>
 .page-container {
   padding: 16px;
-  min-height: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   background: linear-gradient(180deg, #fcfcfd 0%, #f5f7fa 100%);
 }
 
@@ -333,7 +337,11 @@ onMounted(loadTree)
 }
 
 .tree-shell {
-  min-height: 480px;
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   padding: 18px 18px 22px;
   border: 1px solid rgba(15, 23, 42, 0.06);
   border-radius: 20px;
@@ -372,6 +380,14 @@ onMounted(loadTree)
   color: #2859c5;
   font-size: 12px;
   font-weight: 600;
+}
+
+.tree-shell :deep(.ant-spin-nested-loading),
+.tree-shell :deep(.ant-spin-container) {
+  flex: 1;
+  min-height: 0;
+  height: 100%;
+  overflow: auto;
 }
 
 .empty-block {
