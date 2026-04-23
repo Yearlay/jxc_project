@@ -32,3 +32,5 @@ PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT 
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 09_create_basic_tables.sql
 # step 10: 创建业务表：biz_purchase_staff/biz_sales_staff/biz_terminal，并初始化默认数据
 PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 10_create_staff_terminal_tables.sql
+# step 11: 创建业务表：goods_category，并初始化默认分类数据
+PGPASSWORD=$PG_PASSWORD psql -U $PG_USER -d $DB_NAME -h $PG_ADDRESS -p $PG_PORT -f 11_create_goods_category_table.sql
