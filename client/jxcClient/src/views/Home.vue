@@ -2,7 +2,7 @@
   <!-- POS 全屏模式 -->
   <PosPage v-if="posMode" @back="posMode = false" />
 
-  <a-layout v-else style="height: 100vh; overflow: hidden">
+  <a-layout v-else class="home-layout">
     <!-- 左侧菜单 -->
     <a-layout-sider v-model:collapsed="collapsed" collapsible class="sider">
       <div class="logo">{{ collapsed ? 'JXC' : '进销存系统' }}</div>
@@ -15,7 +15,7 @@
       </div>
     </a-layout-sider>
 
-    <a-layout style="height: 100vh; overflow: hidden; display: flex; flex-direction: column">
+    <a-layout class="main-layout">
       <!-- 顶栏 -->
       <a-layout-header class="header">
         <a-button type="primary" class="pos-btn" @click="posMode = true">
@@ -168,6 +168,12 @@ function handleLogout() {
 </script>
 
 <style scoped>
+.home-layout {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+}
+
 .logo {
   height: 64px;
   line-height: 64px;
@@ -215,6 +221,17 @@ function handleLogout() {
   left: 0;
   overflow: hidden;
 }
+
+.main-layout {
+  height: 100vh;
+  min-width: 0;
+  width: 0;
+  flex: 1;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
 .sider-menu-scroll {
   height: calc(100vh - 64px - 48px); /* 减去 logo 高度和 collapse 触发器高度 */
   overflow-y: auto;
@@ -229,13 +246,20 @@ function handleLogout() {
 }
 .content {
   flex: 1;
-  overflow-y: auto;
+  min-width: 0;
+  overflow: hidden;
   margin: 16px;
 }
 .content-inner {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  height: 100%;
   padding: 24px;
   background: #fff;
   min-height: 360px;
   border-radius: 4px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 </style>

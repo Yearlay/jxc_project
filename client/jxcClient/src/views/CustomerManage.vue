@@ -1,7 +1,7 @@
 <template>
-  <div class="page-container">
+  <div ref="pageContainerRef" class="page-container">
     <!-- 顶部工具栏 -->
-    <div class="toolbar">
+    <div ref="toolbarRef" class="toolbar">
       <span class="page-title">客户信息</span>
       <a-input
         v-model:value="keyword"
@@ -22,82 +22,72 @@
       <!-- 左侧片区菜单 -->
       <div class="area-sidebar">
         <div class="sidebar-title">片区管理</div>
-        <a-menu
-          mode="inline"
-          :selected-keys="[String(selectedAreaId)]"
-          @click="onAreaClick"
-        >
-          <a-menu-item key="0">
-            <span class="area-toggle" @click.stop="areaExpanded = !areaExpanded">
-              <DownOutlined v-if="areaExpanded" class="toggle-icon" />
-              <RightOutlined v-else class="toggle-icon" />
-            </span>
-            所有区域
-          </a-menu-item>
-          <template v-if="areaExpanded">
-            <a-menu-item
-              v-for="area in areaList"
-              :key="String(area.id)"
-              class="area-child-item"
-            >
-              {{ area.name }}
-            </a-menu-item>
-          </template>
-        </a-menu>
+        <div class="sidebar-body">
+          <a-tree
+            :tree-data="areaTreeData"
+            :selected-keys="[selectedAreaId]"
+            :default-expand-all="true"
+            block-node
+            @select="onAreaSelect"
+          />
+        </div>
       </div>
 
       <!-- 右侧客户列表 -->
       <div class="table-area">
-        <a-table
-          :columns="columns"
-          :data-source="list"
-          :loading="loading"
-          row-key="id"
-          :pagination="false"
-          size="small"
-        >
-          <template #bodyCell="{ column, record, index }">
-            <!-- 序号 -->
-            <template v-if="column.key === 'seq'">
-              {{ (page - 1) * pageSize + index + 1 }}
-            </template>
+        <div class="table-wrapper">
+          <a-table
+            :columns="columns"
+            :data-source="list"
+            :loading="loading"
+            :scroll="tableScroll"
+            row-key="id"
+            :pagination="false"
+            size="small"
+          >
+            <template #bodyCell="{ column, record, index }">
+              <!-- 序号 -->
+              <template v-if="column.key === 'seq'">
+                {{ (page - 1) * pageSize + index + 1 }}
+              </template>
 
-            <!-- 会员类型标签 -->
-            <template v-else-if="column.key === 'member_type_name'">
-              <a-tag :color="memberTypeColor(record.member_type_name)">
-                {{ record.member_type_name || '-' }}
-              </a-tag>
-            </template>
+              <!-- 会员类型标签 -->
+              <template v-else-if="column.key === 'member_type_name'">
+                <a-tag :color="memberTypeColor(record.member_type_name)">
+                  {{ record.member_type_name || '-' }}
+                </a-tag>
+              </template>
 
-            <!-- 余额 -->
-            <template v-else-if="column.key === 'balance'">
-              ¥{{ (record.balance ?? 0).toFixed(2) }}
-            </template>
+              <!-- 余额 -->
+              <template v-else-if="column.key === 'balance'">
+                ¥{{ (record.balance ?? 0).toFixed(2) }}
+              </template>
 
-            <!-- 操作 -->
-            <template v-else-if="column.key === 'action'">
-              <a-dropdown trigger="click" :destroyPopupOnHide="true">
-                <EllipsisOutlined class="action-btn" />
-                <template #overlay>
-                  <a-menu>
-                    <a-menu-item key="edit" @click="openEdit(record)">
-                      <EditOutlined style="margin-right:6px" />修改
-                    </a-menu-item>
-                    <a-menu-item key="recharge" @click="openRecharge(record)">
-                      <WalletOutlined style="margin-right:6px" />充值
-                    </a-menu-item>
-                    <a-menu-item key="delete" @click="confirmDelete(record)">
-                      <DeleteOutlined style="margin-right:6px" /><span class="danger-text">删除</span>
-                    </a-menu-item>
-                  </a-menu>
-                </template>
-              </a-dropdown>
+              <!-- 操作 -->
+              <template v-else-if="column.key === 'action'">
+                <a-dropdown trigger="click" :destroyPopupOnHide="true">
+                  <EllipsisOutlined class="action-btn" />
+                  <template #overlay>
+                    <a-menu>
+                      <a-menu-item key="edit" @click="openEdit(record)">
+                        <EditOutlined style="margin-right:6px" />修改
+                      </a-menu-item>
+                      <a-menu-item key="recharge" @click="openRecharge(record)">
+                        <WalletOutlined style="margin-right:6px" />充值
+                      </a-menu-item>
+                      <a-menu-item key="delete" @click="confirmDelete(record)">
+                        <DeleteOutlined style="margin-right:6px" /><span class="danger-text">删除</span>
+                      </a-menu-item>
+                    </a-menu>
+                  </template>
+                </a-dropdown>
+              </template>
             </template>
-          </template>
-        </a-table>
+          </a-table>
+        </div>
 
         <!-- 分页 -->
-        <div class="pagination-bar">
+        <div ref="paginationRef" class="pagination-bar">
           <a-pagination
             v-model:current="page"
             v-model:page-size="pageSize"
@@ -250,9 +240,9 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted } from 'vue'
+import { ref, reactive, computed, onMounted, onBeforeUnmount, nextTick } from 'vue'
 import { Modal, message } from 'ant-design-vue'
-import { PlusOutlined, EllipsisOutlined, EditOutlined, WalletOutlined, DeleteOutlined, DownOutlined, RightOutlined } from '@ant-design/icons-vue'
+import { PlusOutlined, EllipsisOutlined, EditOutlined, WalletOutlined, DeleteOutlined } from '@ant-design/icons-vue'
 import { getCustomerList, addCustomer, updateCustomer, rechargeCustomer, deleteCustomer } from '../api/customer'
 import { getAreaList } from '../api/area'
 import { getMemberTypeList } from '../api/memberType'
@@ -266,12 +256,26 @@ const page    = ref(1)
 const pageSize = ref(10)
 const keyword = ref('')
 const selectedAreaId = ref(0)
-const areaExpanded   = ref(true)  // 片区列表默认展开
+const pageContainerRef = ref(null)
+const toolbarRef = ref(null)
+const paginationRef = ref(null)
+const tableScrollY = ref(360)
 
 // ── 下拉数据 ──────────────────────────────────────────────
 const areaList       = ref([])
 const memberTypeList = ref([])
 const userList       = ref([])
+const areaTreeData = computed(() => [
+  {
+    title: '所有区域',
+    key: 0,
+    children: areaList.value.map((area) => ({
+      title: area.name,
+      key: area.id,
+    })),
+  },
+])
+const tableScroll = computed(() => ({ x: 1280, y: tableScrollY.value }))
 // ── 表格列定义 ────────────────────────────────────────────
 const columns = [
   { title: '序号',     key: 'seq',              width: 60,  align: 'center' },
@@ -279,14 +283,14 @@ const columns = [
   { title: '名称',     dataIndex: 'name',       key: 'name',       width: 160,  ellipsis: true },
   { title: '联系人',   dataIndex: 'contact',    key: 'contact',    width: 70 },
   { title: '电话',     dataIndex: 'phone',      key: 'phone',      width: 125 },
-  { title: '地址',     dataIndex: 'address',    key: 'address',    ellipsis: true },
+  { title: '地址',     dataIndex: 'address',    key: 'address',    width: 220, ellipsis: true },
   { title: '会员类型', key: 'member_type_name', width: 110 },
   { title: '会员号',   dataIndex: 'member_no',  key: 'member_no',  width: 105 },
   { title: '生日',     dataIndex: 'birthday',   key: 'birthday',   width: 100 },
   { title: '余额',     dataIndex: 'balance',    key: 'balance',    width: 80,  align: 'right' },
   { title: '积分',     dataIndex: 'points',     key: 'points',     width: 70,  align: 'right' },
   { title: '业务员',   dataIndex: 'salesman_name', key: 'salesman_name', width: 90 },
-  { title: '操作',     key: 'action',           width: 60,  align: 'center', fixed: 'right' },
+  { title: '操作',     key: 'action',           width: 60,  align: 'center' },
 ]
 
 // ── 会员类型颜色 ──────────────────────────────────────────
@@ -339,10 +343,19 @@ function onPageSizeChange(cur, size) {
   loadList()
 }
 
-function onAreaClick({ key }) {
-  selectedAreaId.value = Number(key)
+function onAreaSelect(selectedKeys) {
+  selectedAreaId.value = Number(selectedKeys[0] ?? 0)
   page.value = 1
   loadList()
+}
+
+function updateTableScrollY() {
+  const pageTop = pageContainerRef.value?.getBoundingClientRect().top || 0
+  const toolbarHeight = toolbarRef.value?.offsetHeight || 0
+  const paginationHeight = paginationRef.value?.offsetHeight || 0
+  const reservedSpace = toolbarHeight + paginationHeight + 72
+  const availableHeight = window.innerHeight - pageTop - reservedSpace
+  tableScrollY.value = Math.max(260, Math.floor(availableHeight))
 }
 
 // ── 新建/修改弹窗 ─────────────────────────────────────────
@@ -504,12 +517,27 @@ onMounted(async () => {
   if (mtRes.code === 200)    memberTypeList.value  = mtRes.data
   if (userRes.code === 200)  userList.value        = userRes.data
   loadList()
+  await nextTick()
+  updateTableScrollY()
+  window.addEventListener('resize', updateTableScrollY)
+})
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', updateTableScrollY)
 })
 </script>
 
 <style scoped>
 .page-container {
   padding: 16px;
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .toolbar {
@@ -528,16 +556,22 @@ onMounted(async () => {
 
 .main-layout {
   display: flex;
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
   gap: 12px;
-  align-items: flex-start;
+  align-items: stretch;
+  min-height: 0;
+  overflow: hidden;
 }
 
 .area-sidebar {
   width: 180px;
+  height: 100%;
   flex-shrink: 0;
   border: 1px solid #f0f0f0;
   border-radius: 6px;
-  overflow: hidden;
+  overflow: auto;
   background: #fff;
 }
 
@@ -549,40 +583,70 @@ onMounted(async () => {
   font-size: 13px;
 }
 
-.area-sidebar :deep(.ant-menu) {
-  border-inline-end: none;
+.sidebar-body {
+  padding: 12px;
 }
 
-.area-toggle {
-  display: inline-flex;
-  align-items: center;
-  margin-right: 6px;
-  cursor: pointer;
+.area-sidebar :deep(.ant-tree) {
+  background: transparent;
 }
 
-.toggle-icon {
-  font-size: 10px;
-  color: #666;
-  transition: transform 0.2s;
-}
-
-.area-child-item {
-  padding-left: 32px !important;
-}
-
-:deep(.area-child-item.ant-menu-item) {
-  padding-left: 32px !important;
+.area-sidebar :deep(.ant-tree-treenode) {
+  width: 100%;
 }
 
 .table-area {
   flex: 1;
+  width: 0;
+  max-width: 100%;
   min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.table-wrapper {
+  flex: 1;
+  width: 100%;
+  max-width: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.table-wrapper :deep(.ant-table-wrapper) {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.table-wrapper :deep(.ant-spin-nested-loading),
+.table-wrapper :deep(.ant-spin-container),
+.table-wrapper :deep(.ant-table) {
+  height: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.table-wrapper :deep(.ant-table-container) {
+  max-width: 100%;
+}
+
+.table-wrapper :deep(.ant-table-content) {
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+}
+
+.table-wrapper :deep(.ant-table-body) {
+  overflow-x: auto !important;
 }
 
 .pagination-bar {
   display: flex;
   justify-content: flex-end;
   margin-top: 16px;
+  flex-shrink: 0;
 }
 
 .action-btn {

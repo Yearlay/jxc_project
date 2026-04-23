@@ -4,6 +4,7 @@
     v-model:openKeys="openKeys"
     mode="inline"
     :theme="theme"
+    class="side-menu"
     @click="onMenuClick"
   >
     <template v-for="item in menuTree" :key="item.id">
@@ -110,3 +111,22 @@ function onMenuClick({ key }) {
   emit('menuSelect', id)
 }
 </script>
+
+<style scoped>
+.side-menu {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.side-menu :deep(.ant-menu-submenu-title),
+.side-menu :deep(.ant-menu-title-content) {
+  min-width: 0;
+}
+
+.side-menu :deep(.ant-menu-title-content) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+</style>
