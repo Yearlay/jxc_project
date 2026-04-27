@@ -13,9 +13,28 @@ def _err(msg, code=400):
     return jsonify(code=code, msg=msg), code
 
 
+def _generate_next_goods_code(cur):
+    cur.execute('SELECT COALESCE(MAX(id), 0) AS max_id FROM biz_goods')
+    next_id = int(cur.fetchone()['max_id']) + 1
+    return f'SP{next_id:08d}'
+
+
 # ──────────────────────────────────────────────────────────
 # 商品接口
 # ──────────────────────────────────────────────────────────
+
+@goods_bp.route('/goods/next-code', methods=['GET'])
+def goods_next_code():
+    conn = db.get_conn()
+    try:
+        with conn.cursor() as cur:
+            code = _generate_next_goods_code(cur)
+    except Exception as e:
+        return _err(str(e), 500)
+    finally:
+        conn.close()
+
+    return _ok(data={'code': code})
 
 @goods_bp.route('/goods/list', methods=['GET'])
 def goods_list():
@@ -100,14 +119,14 @@ def goods_add():
     data = request.get_json(force=True) or {}
     code = data.get('code', '').strip()
     name = data.get('name', '').strip()
-    if not code:
-        return _err('商品编码不能为空')
     if not name:
         return _err('商品名称不能为空')
 
     conn = db.get_conn()
     try:
         with conn.cursor() as cur:
+            if not code:
+                code = _generate_next_goods_code(cur)
             cur.execute('SELECT id FROM biz_goods WHERE code = %s', (code,))
             if cur.fetchone():
                 return _err(f'商品编码 "{code}" 已存在')

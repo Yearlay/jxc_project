@@ -132,7 +132,11 @@
         <a-row :gutter="16">
           <a-col :span="12">
             <a-form-item label="商品编码" name="code">
-              <a-input v-model:value="goodsForm.code" placeholder="请输入商品编码" />
+              <a-input
+                v-model:value="goodsForm.code"
+                :readonly="goodsModalMode === 'add'"
+                :placeholder="goodsModalMode === 'add' ? '系统自动生成商品编码' : '请输入商品编码'"
+              />
             </a-form-item>
           </a-col>
           <a-col :span="12">
@@ -453,6 +457,7 @@ import {
   deleteGoods,
   deleteGoodsStock,
   getGoodsList,
+  getNextGoodsCode,
   getGoodsStockList,
   transferGoodsStock,
   updateGoods,
@@ -784,11 +789,17 @@ function onPageSizeChange(current, size) {
   loadGoods()
 }
 
-function openAddGoods() {
+async function openAddGoods() {
   activeGoods.value = null
   goodsModalMode.value = 'add'
   goodsModalTitle.value = '新建商品'
   assignGoodsForm({ category_id: unclassifiedCategoryId.value })
+  try {
+    const res = await getNextGoodsCode()
+    goodsForm.code = res.data?.code || ''
+  } catch (err) {
+    message.error(err.response?.data?.msg || '获取商品编码失败')
+  }
   goodsModalVisible.value = true
 }
 

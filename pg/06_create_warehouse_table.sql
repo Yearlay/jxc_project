@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS biz_warehouse (
     name        VARCHAR(100)  NOT NULL UNIQUE,
     address     VARCHAR(200)  NOT NULL DEFAULT '',
     remark      VARCHAR(200)  NOT NULL DEFAULT '',
+    is_default  SMALLINT      NOT NULL DEFAULT 0,
     created_at  TIMESTAMP     NOT NULL DEFAULT NOW()
 );
 
@@ -22,19 +23,23 @@ COMMENT ON TABLE  biz_warehouse            IS '仓库信息表';
 COMMENT ON COLUMN biz_warehouse.name       IS '仓库名称（唯一）';
 COMMENT ON COLUMN biz_warehouse.address    IS '仓库地址';
 COMMENT ON COLUMN biz_warehouse.remark     IS '备注';
+COMMENT ON COLUMN biz_warehouse.is_default IS '是否默认仓库：1=是 0=否';
 COMMENT ON COLUMN biz_warehouse.created_at IS '创建时间';
 
 -- ----------------------------
 -- 初始化：示例仓库数据
 -- ----------------------------
-INSERT INTO biz_warehouse (name, address, remark)
+INSERT INTO biz_warehouse (name, address, remark, is_default)
 VALUES
-    ('北京总仓',   '北京市朝阳区望京街道1号',     '集团总仓库'),
-    ('上海分仓',   '上海市浦东新区张江高科技园区', '华东区分仓'),
-    ('广州分仓',   '广州市天河区科韵路66号',       '华南区分仓'),
-    ('成都分仓',   '成都市高新区天府大道100号',    '西南区分仓'),
-    ('武汉分仓',   '武汉市江汉区建设大道200号',    '华中区分仓')
+    ('北京总仓',   '北京市朝阳区望京街道1号',     '集团总仓库', 1),
+    ('上海分仓',   '上海市浦东新区张江高科技园区', '华东区分仓', 0),
+    ('广州分仓',   '广州市天河区科韵路66号',       '华南区分仓', 0),
+    ('成都分仓',   '成都市高新区天府大道100号',    '西南区分仓', 0),
+    ('武汉分仓',   '武汉市江汉区建设大道200号',    '华中区分仓', 0)
 ON CONFLICT (name) DO NOTHING;
+
+UPDATE biz_warehouse SET is_default = 0;
+UPDATE biz_warehouse SET is_default = 1 WHERE name = '北京总仓';
 
 -- ----------------------------
 -- 为 sys_user 追加 warehouse_id / area_id 字段及外键约束

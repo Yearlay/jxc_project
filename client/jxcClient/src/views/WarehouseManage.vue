@@ -24,8 +24,13 @@
       :pagination="false"
     >
       <template #bodyCell="{ column, record }">
+        <template v-if="column.key === 'is_default'">
+          <a-tag v-if="Number(record.is_default) === 1" color="blue">默认</a-tag>
+          <span v-else></span>
+        </template>
+
         <!-- 操作列 -->
-        <template v-if="column.key === 'action'">
+        <template v-else-if="column.key === 'action'">
           <a-dropdown trigger="click" :destroyPopupOnHide="true">
             <EllipsisOutlined class="action-btn" />
             <template #overlay>
@@ -64,6 +69,14 @@
         <a-form-item label="备注" name="remark">
           <a-input v-model:value="form.remark" placeholder="备注（可选）" />
         </a-form-item>
+        <a-form-item label="默认仓库">
+          <a-switch
+            :checked="Number(form.is_default) === 1"
+            checked-children="是"
+            un-checked-children="否"
+            @change="(checked) => { form.is_default = checked ? 1 : 0 }"
+          />
+        </a-form-item>
       </a-form>
     </a-modal>
   </div>
@@ -94,7 +107,7 @@ const modalTitle = ref('创建新仓库')
 const submitting = ref(false)
 const editingId = ref(null)
 const formRef = ref()
-const form = ref({ name: '', address: '', remark: '' })
+const form = ref({ name: '', address: '', remark: '', is_default: 0 })
 const rules = {
   name: [{ required: true, message: '仓库名称不能为空', trigger: 'blur' }],
 }
@@ -103,6 +116,7 @@ const columns = [
   { title: '仓库名称', dataIndex: 'name', key: 'name' },
   { title: '地址', dataIndex: 'address', key: 'address' },
   { title: '备注', dataIndex: 'remark', key: 'remark' },
+  { title: '默认仓库', dataIndex: 'is_default', key: 'is_default', width: 100, align: 'center' },
   { title: '操作', key: 'action', width: 60, align: 'center' },
 ]
 
@@ -123,14 +137,19 @@ function onSearchChange(e) {
 function openAdd() {
   editingId.value = null
   modalTitle.value = '创建新仓库'
-  form.value = { name: '', address: '', remark: '' }
+  form.value = { name: '', address: '', remark: '', is_default: 0 }
   modalVisible.value = true
 }
 
 function openEdit(record) {
   editingId.value = record.id
   modalTitle.value = '修改仓库'
-  form.value = { name: record.name, address: record.address || '', remark: record.remark || '' }
+  form.value = {
+    name: record.name,
+    address: record.address || '',
+    remark: record.remark || '',
+    is_default: Number(record.is_default) === 1 ? 1 : 0,
+  }
   modalVisible.value = true
 }
 

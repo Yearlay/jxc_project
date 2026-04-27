@@ -3,6 +3,8 @@ import request from '../utils/request'
 export const getGoodsList = (params = {}) =>
   request.get('/api/goods/list', { params })
 
+export const getNextGoodsCode = () => request.get('/api/goods/next-code')
+
 export const addGoods = (data) => request.post('/api/goods/add', data)
 
 export const updateGoods = (data) => request.put('/api/goods/update', data)
