@@ -171,7 +171,7 @@
             size="large"
             placeholder="扫码 / 商品名称 / 商品编码"
             @focus="focusZone = 'input'"
-            @pressEnter="handleSearchSubmit"
+            @pressEnter="handleSearchEnter"
           >
             <template #prefix>
               <SearchOutlined />
@@ -400,8 +400,8 @@ import {
   ShopOutlined,
   TeamOutlined,
 } from '@ant-design/icons-vue'
-import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref } from 'vue'
-import { message } from 'ant-design-vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+import { message, Modal } from 'ant-design-vue'
 
 import { getCustomerList } from '../api/customer'
 import { getMemberTypeList } from '../api/memberType'
@@ -421,6 +421,8 @@ const emit = defineEmits(['back'])
 
 const searchInputRef = ref(null)
 const clockTimer = ref(null)
+const searchSuggestTimer = ref(null)
+const searchSuggestToken = ref(0)
 
 const userInfo = reactive(JSON.parse(localStorage.getItem('userInfo') || '{}'))
 
@@ -599,9 +601,18 @@ function buildCartItem(result) {
     final_amount: roundMoney(finalPrice * quantity),
     warehouse_id: selectedWarehouse.value?.id,
     warehouse_name: selectedWarehouse.value?.name,
+    stock_total: Number(result.stock_total || 0),
     enable_points: Number(result.enable_points || 0),
     enable_discount: Number(result.enable_discount || 0),
   }
+}
+
+function showInsufficientStockModal(stockTotal) {
+  Modal.warning({
+    title: '库存不足',
+    content: `当前商品库存不足，请先补充商品库存。当前库存：${Math.max(0, Number(stockTotal || 0))}`,
+    okText: '我知道了',
+  })
 }
 
 function recalculateCartItem(item) {
@@ -663,23 +674,62 @@ async function loadBootstrapAndOptions() {
   }
 }
 
+async function fetchSearchResults(keyword, { focusResults = true, silent = false } = {}) {
+  if (!keyword) {
+    searchResults.value = []
+    activeResultIndex.value = -1
+    focusZone.value = 'input'
+    return []
+  }
+
+  const token = ++searchSuggestToken.value
+  const res = await searchPosGoods({
+    keyword,
+    warehouse_id: selectedWarehouse.value?.id,
+  })
+  if (token !== searchSuggestToken.value) {
+    return searchResults.value
+  }
+
+  const rows = res.data || []
+  searchResults.value = rows
+  activeResultIndex.value = rows.length ? 0 : -1
+  if (focusResults) {
+    focusZone.value = rows.length ? 'results' : 'input'
+  }
+  if (!rows.length && !silent) {
+    message.warning('未找到匹配商品')
+    focusSearchInput()
+  }
+  return rows
+}
+
 async function handleSearchSubmit() {
   const keyword = searchKeyword.value.trim()
   if (!keyword) {
     message.warning('请输入商品名称或条码')
     return
   }
-  const res = await searchPosGoods({
-    keyword,
-    warehouse_id: selectedWarehouse.value?.id,
-  })
-  searchResults.value = res.data || []
-  activeResultIndex.value = searchResults.value.length ? 0 : -1
-  focusZone.value = searchResults.value.length ? 'results' : 'input'
-  if (!searchResults.value.length) {
-    message.warning('未找到匹配商品')
-    focusSearchInput()
+  await fetchSearchResults(keyword)
+}
+
+async function handleSearchEnter() {
+  const keyword = searchKeyword.value.trim()
+  if (!keyword) {
+    message.warning('请输入商品名称或条码')
+    return
   }
+
+  let rows = searchResults.value
+  if (!rows.length) {
+    rows = await fetchSearchResults(keyword, { focusResults: false })
+  }
+  if (!rows.length) {
+    return
+  }
+
+  activeResultIndex.value = 0
+  appendActiveSearchResult()
 }
 
 function selectSearchResult(index) {
@@ -698,11 +748,22 @@ function appendActiveSearchResult() {
     return
   }
   const result = searchResults.value[activeResultIndex.value]
+  const stockTotal = Number(result.stock_total || 0)
+  if (stockTotal <= 0) {
+    showInsufficientStockModal(stockTotal)
+    return
+  }
   const existingIndex = cart.value.findIndex(
     (item) => item.goods_id === result.id && item.warehouse_id === selectedWarehouse.value?.id
   )
   if (existingIndex >= 0) {
-    cart.value[existingIndex].quantity += 1
+    const nextQuantity = Number(cart.value[existingIndex].quantity || 0) + 1
+    if (nextQuantity > stockTotal) {
+      showInsufficientStockModal(stockTotal)
+      return
+    }
+    cart.value[existingIndex].quantity = nextQuantity
+    cart.value[existingIndex].stock_total = stockTotal
     cart.value[existingIndex] = recalculateCartItem({ ...cart.value[existingIndex] })
     activeCartIndex.value = existingIndex
   } else {
@@ -885,7 +946,13 @@ function confirmQuantityChange() {
     return
   }
   const target = cart.value[activeCartIndex.value]
-  target.quantity = Math.max(1, Number(quantityDraft.value || 1))
+  const nextQuantity = Math.max(1, Number(quantityDraft.value || 1))
+  const stockTotal = Number(target.stock_total || 0)
+  if (stockTotal > 0 && nextQuantity > stockTotal) {
+    showInsufficientStockModal(stockTotal)
+    return
+  }
+  target.quantity = nextQuantity
   cart.value[activeCartIndex.value] = recalculateCartItem({ ...target })
   quantityModalOpen.value = false
 }
@@ -1033,7 +1100,30 @@ onMounted(async () => {
   focusSearchInput()
 })
 
+watch(searchKeyword, (value) => {
+  if (searchSuggestTimer.value) {
+    window.clearTimeout(searchSuggestTimer.value)
+    searchSuggestTimer.value = null
+  }
+
+  const keyword = value.trim()
+  if (!keyword) {
+    searchSuggestToken.value += 1
+    searchResults.value = []
+    activeResultIndex.value = -1
+    focusZone.value = 'input'
+    return
+  }
+
+  searchSuggestTimer.value = window.setTimeout(() => {
+    fetchSearchResults(keyword, { focusResults: false, silent: true }).catch(() => {})
+  }, 180)
+})
+
 onBeforeUnmount(() => {
+  if (searchSuggestTimer.value) {
+    window.clearTimeout(searchSuggestTimer.value)
+  }
   if (clockTimer.value) {
     window.clearInterval(clockTimer.value)
   }

@@ -92,8 +92,8 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 
 -- ── 销售管理 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(12, 2, 'POS销售',    '/sales/pos',        2, 2),
-(13, 2, '商品销售',   '/sales/goods',      2, 1),
+(12, 2, 'POS销售',    '/sales/pos',        2, 1),
+(13, 2, '商品销售',   '/sales/goods',      2, 2),
 (14, 2, '销售退货',   '/sales/return',     2, 3),
 (15, 2, '应收款查询', '/sales/receivable', 2, 4);
 
