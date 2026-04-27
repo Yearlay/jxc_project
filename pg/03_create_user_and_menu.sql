@@ -92,80 +92,64 @@ INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
 
 -- ── 销售管理 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(12, 2, '商品销售',   '/sales/goods',      2, 1),
-(13, 2, 'POS销售',    '/sales/pos',        2, 2),
+(12, 2, 'POS销售',    '/sales/pos',        2, 2),
+(13, 2, '商品销售',   '/sales/goods',      2, 1),
 (14, 2, '销售退货',   '/sales/return',     2, 3),
 (15, 2, '应收款查询', '/sales/receivable', 2, 4);
 
--- ── 商品销售 三级菜单 ──────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(16, 12, '商品销售单', '/sales/goods/order', 3, 1),
-(17, 12, '销售单查询', '/sales/goods/query', 3, 2);
-
--- ── POS销售 三级菜单 ───────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(18, 13, 'POS前台销售', '/sales/pos/front',  3, 1),
-(19, 13, '销售结算',    '/sales/pos/settle', 3, 2),
-(20, 13, 'POS单据查询', '/sales/pos/query',  3, 3);
-
--- ── 销售退货 三级菜单 ──────────────────────────────────────
-INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(21, 14, '商品退货单', '/sales/return/order', 3, 1),
-(22, 14, '退货单查询', '/sales/return/query', 3, 2);
-
 -- ── 商品管理 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(23, 3, '商品分类', '/goods/category', 2, 1),
-(24, 3, '商品列表', '/goods/list', 2, 2),
-(25, 3, '商品报溢', '/goods/surplus',  2, 3),
-(26, 3, '商品报损', '/goods/damage',   2, 4);
+(16, 3, '商品分类', '/goods/category', 2, 1),
+(17, 3, '商品列表', '/goods/list', 2, 2),
+(18, 3, '商品报溢', '/goods/surplus',  2, 3),
+(19, 3, '商品报损', '/goods/damage',   2, 4);
 
 -- ── 财务管理 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(27, 5, '应收应付', '/finance/payable', 2, 1),
-(28, 5, '日常收支', '/finance/daily',   2, 2),
-(29, 5, '数据报表', '/finance/report',  2, 3);
+(20, 5, '应收应付', '/finance/payable', 2, 1),
+(21, 5, '日常收支', '/finance/daily',   2, 2),
+(22, 5, '数据报表', '/finance/report',  2, 3);
 
 -- ── 应收应付 三级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(30, 27, '应收款', '/finance/payable/receivable', 3, 1),
-(31, 27, '应付款', '/finance/payable/payable',    3, 2),
-(32, 27, '还款',   '/finance/payable/repay',      3, 3);
+(23, 20, '应收款', '/finance/payable/receivable', 3, 1),
+(24, 20, '应付款', '/finance/payable/payable',    3, 2),
+(25, 20, '还款',   '/finance/payable/repay',      3, 3);
 
 -- ── 营业统计 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(33, 6, '商品采购明细查询', '/statistics/purchase-detail',   2, 1),
-(34, 6, '商品采购统计',     '/statistics/purchase-summary',  2, 2),
-(35, 6, '营业统计',         '/statistics/business',          2, 3),
-(36, 6, '商品销售明细查询', '/statistics/sales-detail',      2, 4),
-(37, 6, '商品销售统计',     '/statistics/sales-summary',     2, 5),
-(38, 6, '畅销商品排行榜',   '/statistics/bestseller',        2, 6),
-(39, 6, '低库存统计',       '/statistics/low-stock',         2, 7),
-(40, 6, '过期商品统计',     '/statistics/expired',           2, 8),
-(41, 6, '销售利润统计',     '/statistics/profit',            2, 9);
+(26, 6, '商品采购明细查询', '/statistics/purchase-detail',   2, 1),
+(27, 6, '商品采购统计',     '/statistics/purchase-summary',  2, 2),
+(28, 6, '营业统计',         '/statistics/business',          2, 3),
+(29, 6, '商品销售明细查询', '/statistics/sales-detail',      2, 4),
+(30, 6, '商品销售统计',     '/statistics/sales-summary',     2, 5),
+(31, 6, '畅销商品排行榜',   '/statistics/bestseller',        2, 6),
+(32, 6, '低库存统计',       '/statistics/low-stock',         2, 7),
+(33, 6, '过期商品统计',     '/statistics/expired',           2, 8),
+(34, 6, '销售利润统计',     '/statistics/profit',            2, 9);
 
 -- ── 系统维护 二级菜单 ──────────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(42, 7, '设置企业信息',      '/system/company',     2, 1),
-(43, 7, '用户管理',         '/system/user/manage', 2, 2),
-(44, 7, '权限组管理',       '/system/user/role',   2, 3),
-(45, 7, '生日提醒',         '/system/birthday',    2, 4),
-(46, 7, '供货商管理',       '/system/supplier',    2, 5),
-(47, 7, '积分管理',         '/system/points',      2, 6),
-(48, 7, '基础信息设置',      '/system/basic',       2, 7);
+(35, 7, '设置企业信息',      '/system/company',     2, 1),
+(36, 7, '用户管理',         '/system/user/manage', 2, 2),
+(37, 7, '权限组管理',       '/system/user/role',   2, 3),
+(38, 7, '生日提醒',         '/system/birthday',    2, 4),
+(39, 7, '供货商管理',       '/system/supplier',    2, 5),
+(40, 7, '积分管理',         '/system/points',      2, 6),
+(41, 7, '基础信息设置',      '/system/basic',       2, 7);
 
 -- ── 基础信息设置 三级菜单 ──────────────────────────────────
 INSERT INTO sys_menu (id, parent_id, name, path, level, sort) VALUES
-(49, 48, '仓库',     '/system/basic/warehouse',      3, 1),
-(50, 48, '计量单位', '/system/basic/unit',           3, 2),
-(51, 48, '厂家信息', '/system/basic/manufacturer',   3, 3),
-(52, 48, '会员类型', '/system/basic/member-type',    3, 4),
-(53, 48, '片区信息', '/system/basic/area',           3, 5),
-(54, 48, '车辆信息', '/system/basic/vehicle',        3, 6),
-(55, 48, '付款方式', '/system/basic/payment',        3, 7),
-(56, 48, '采购业务员','/system/basic/purchase-staff',3, 8),
-(57, 48, '销售业务员','/system/basic/sales-staff',   3, 9),
-(58, 48, '销售终端', '/system/basic/branch',         3, 10);
+(49, 41, '仓库',     '/system/basic/warehouse',      3, 1),
+(50, 41, '计量单位', '/system/basic/unit',           3, 2),
+(51, 41, '厂家信息', '/system/basic/manufacturer',   3, 3),
+(52, 41, '会员类型', '/system/basic/member-type',    3, 4),
+(53, 41, '片区信息', '/system/basic/area',           3, 5),
+(54, 41, '车辆信息', '/system/basic/vehicle',        3, 6),
+(55, 41, '付款方式', '/system/basic/payment',        3, 7),
+(56, 41, '采购业务员','/system/basic/purchase-staff',3, 8),
+(57, 41, '销售业务员','/system/basic/sales-staff',   3, 9),
+(58, 41, '销售终端', '/system/basic/branch',         3, 10);
 
 -- 重置序列，避免后续 INSERT 冲突
 SELECT setval('sys_menu_id_seq', (SELECT MAX(id) FROM sys_menu));

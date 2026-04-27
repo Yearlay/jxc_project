@@ -15,6 +15,7 @@ from api.basic import basic_bp
 from api.staff import staff_bp
 from api.goods_category import goods_category_bp
 from api.goods import goods_bp
+from api.pos import pos_bp
 
 app = Flask(__name__)
 CORS(app)  # 允许跨域（开发阶段）
@@ -33,6 +34,7 @@ app.register_blueprint(basic_bp, url_prefix='/api')
 app.register_blueprint(staff_bp, url_prefix='/api')
 app.register_blueprint(goods_category_bp, url_prefix='/api')
 app.register_blueprint(goods_bp, url_prefix='/api')
+app.register_blueprint(pos_bp, url_prefix='/api')
 
 
 # ──────────────────────────────────────────────────────────

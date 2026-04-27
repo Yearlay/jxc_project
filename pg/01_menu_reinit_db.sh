@@ -23,9 +23,10 @@ echo "  1) ALL      - 删除数据库，全部重建"
 echo "  2) 账户菜单 - 重置账户/权限/菜单数据/基础数据  (step 3~9)"
 echo "  3) 客户数据 - 重置客户数据             (step 10)"
 echo "  4) 商品数据 - 重置商品分类/商品/库存   (step 11~12)"
+echo "  5) POS数据  - 重置前台销售/挂单数据    (step 13)"
 echo "  q) 退出"
 echo "==========================================="
-read -p "请选择 [1-4/q]: " CHOICE
+read -p "请选择 [1-5/q]: " CHOICE
 echo ""
 
 case "$CHOICE" in
@@ -43,6 +44,7 @@ case "$CHOICE" in
     run_file 10_create_customer_table.sql
     run_file 11_create_goods_category_table.sql
     run_file 12_create_goods_tables.sql
+    run_file 13_create_pos_tables.sql
     echo ">>> 全部重建完成！"
     ;;
 
@@ -91,13 +93,27 @@ case "$CHOICE" in
   4)
     echo ">>> [商品数据] 重置商品分类/商品/库存..."
     run_sql "
+      DROP TABLE IF EXISTS biz_pos_order_item CASCADE;
+      DROP TABLE IF EXISTS biz_pos_order      CASCADE;
       DROP TABLE IF EXISTS biz_goods_stock CASCADE;
       DROP TABLE IF EXISTS biz_goods       CASCADE;
       DROP TABLE IF EXISTS goods_category  CASCADE;
     "
     run_file 11_create_goods_category_table.sql
     run_file 12_create_goods_tables.sql
+    run_file 13_create_pos_tables.sql
     echo ">>> 商品数据重置完成！"
+    ;;
+
+  5)
+    echo ">>> [POS数据] 重置前台销售/挂单数据..."
+    run_sql "
+      DROP TABLE IF EXISTS biz_pos_order_item CASCADE;
+      DROP TABLE IF EXISTS biz_pos_order      CASCADE;
+      DROP TABLE IF EXISTS biz_pos_hold_order CASCADE;
+    "
+    run_file 13_create_pos_tables.sql
+    echo ">>> POS 数据重置完成！"
     ;;
 
   q|Q)
@@ -106,7 +122,7 @@ case "$CHOICE" in
     ;;
 
   *)
-    echo "无效选项，请输入 1~4 或 q"
+    echo "无效选项，请输入 1~5 或 q"
     exit 1
     ;;
 esac

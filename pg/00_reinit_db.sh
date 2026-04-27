@@ -41,3 +41,5 @@ run_file 10_create_customer_table.sql
 run_file 11_create_goods_category_table.sql
 # step 12: 创建业务表：biz_goods（商品表）、biz_goods_stock（商品库存表）
 run_file 12_create_goods_tables.sql
+# step 13: 创建业务表：POS 销售主表/明细表/挂单表
+run_file 13_create_pos_tables.sql
