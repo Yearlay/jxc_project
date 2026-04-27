@@ -76,6 +76,7 @@ import TerminalManage from './TerminalManage.vue'
 import GoodsCategoryManage from './GoodsCategoryManage.vue'
 import GoodsManage from './GoodsManage.vue'
 import PosPage from './PosPage.vue'
+import PosSalesManage from './PosSalesManage.vue'
 import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
@@ -96,6 +97,7 @@ const COMPONENT_MAP = {
   '/system/basic/purchase-staff': PurchaseStaffManage,
   '/system/basic/sales-staff':    SalesStaffManage,
   '/system/basic/branch':         TerminalManage,
+  '/sales/pos':                   PosSalesManage,
 
 }
 
