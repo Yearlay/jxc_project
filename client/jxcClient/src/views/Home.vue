@@ -80,10 +80,12 @@ import { getMenu } from '../api/menu'
 
 // 菜单路径 → 组件 映射表（后续新增页面在此注册）
 const COMPONENT_MAP = {
+  '/goods/category':           GoodsCategoryManage,
+  '/goods/list':               GoodsManage,
+  '/customer':                 CustomerManage,
   '/system/user/role':         GroupManage,
   '/system/basic/area':        AreaManage,
   '/system/basic/member-type': MemberTypeManage,
-  '/system/customer':          CustomerManage,
   '/system/basic/warehouse':   WarehouseManage,
   '/system/user/manage':        UserManage,
   '/system/company':             CompanyInfo,
@@ -94,8 +96,7 @@ const COMPONENT_MAP = {
   '/system/basic/purchase-staff': PurchaseStaffManage,
   '/system/basic/sales-staff':    SalesStaffManage,
   '/system/basic/branch':         TerminalManage,
-  '/goods/category':              GoodsCategoryManage,
-  '/goods/list':                  GoodsManage,
+
 }
 
 const router = useRouter()

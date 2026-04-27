@@ -61,7 +61,7 @@ const ICON_MAP = {
   '报表查询': BarChartOutlined,       // 柱状图
   '营业统计': PieChartOutlined,       // 饼图
   '系统维护': SettingOutlined,        // 齿轮
-  '权限管理': TeamOutlined,           // 团队/人员
+  '客户管理': TeamOutlined,           // 团队/人员
 }
 
 function getIcon(name) {

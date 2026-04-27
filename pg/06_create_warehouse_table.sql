@@ -1,8 +1,8 @@
 -- ============================================================
--- 07_create_warehouse_table.sql
+-- 06_create_warehouse_table.sql
 -- 创建业务表：biz_warehouse（仓库管理）
 -- 初始化数据：5 条示例仓库
--- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 07_create_warehouse_table.sql
+-- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 06_create_warehouse_table.sql
 -- ============================================================
 
 \c jxc;

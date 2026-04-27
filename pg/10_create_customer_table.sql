@@ -1,8 +1,8 @@
 -- ============================================================
--- 06_create_customer_table.sql
+-- 10_create_customer_table.sql
 -- 创建业务表：biz_customer（客户管理）
 -- 初始化数据：5~8 条示例客户
--- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 06_create_customer_table.sql
+-- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 10_create_customer_table.sql
 -- ============================================================
 
 \c jxc;

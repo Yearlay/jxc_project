@@ -1,8 +1,8 @@
 -- ============================================================
--- 08_create_company_table.sql
+-- 07_create_company_table.sql
 -- 创建系统表：sys_company（企业/门店信息）
 -- 全局仅一条数据，初始化时不插入数据
--- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 08_create_company_table.sql
+-- 执行方式：psql -U onepiece -d jxc -h 192.168.0.116 -p 5432 -W -f 07_create_company_table.sql
 -- ============================================================
 
 \c jxc;
